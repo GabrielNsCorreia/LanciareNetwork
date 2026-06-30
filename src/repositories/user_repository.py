@@ -19,3 +19,6 @@ def get_user_by_email(email) -> Optional[User]:
     user = db.session.scalar(stmt)
     return user
 
+def create_user(user) -> None:
+    db.session.add(user)
+    db.session.commit()

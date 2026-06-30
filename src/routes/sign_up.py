@@ -1,8 +1,18 @@
 from flask import Blueprint
 from flask import request
 from flask import jsonify
+from models.user import User
 from services.auth import auth
 from services.register_user import register_user
+
+def user_to_dict(user:User) -> dict:
+    return {
+        "id": user.id, 
+        "username": user.username,
+        "name": user.name,
+        "email": user.email
+    }
+
 
 sign_up_bp = Blueprint("sign_up", __name__)
 
@@ -22,6 +32,6 @@ def sign_up():
     if (not auth(name, username, email)):
         return jsonify({"error":"Data already registered"}), 400
 
-    register_user(name, username, email, password)
+    user = register_user(name, username, email, password)
 
-    return jsonify({"message":"User created"}), 200
+    return jsonify({"message":"User created", "user":user_to_dict(user)}), 201
